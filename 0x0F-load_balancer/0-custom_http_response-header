@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
-# Configure Http Header Response
-search="\troot \/var\/www\/html;"
-new_string="\tadd_header X-Served-By $(hostname);"
-
-sudo apt -y update
-sudo apt -y upgrade
-sudo apt -y install nginx
-sudo sed -i "s/${search}/${search}\n\n${new_string}/" /etc/nginx/sites-available/default
-sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-sudo service nginx restart
+# Configures a new Ubuntu server with a custom HTTP header response
+sudo apt-get -y update
+sudo apt-get -y install nginx
+sudo ufw allow 'Nginx HTTP'
+sudo echo 'Holberton School' > /var/www/html/index.nginx-debian.html
+sudo sed -i '/listen 80 default_server;/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
+sudo sed -i '/listen 80 default_server;/a add_header X-Served-By $hostname;' /etc/nginx/sites-available/default
+sudo service nginx start
